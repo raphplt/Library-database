@@ -1,0 +1,45 @@
+datasource db {
+  provider = "mysql"
+  url      = "mysql://root:root@localhost:3306/library"
+}
+
+generator client {
+  provider        = "prisma-client-js"
+}
+
+model Book {
+  id            Int      @id @default(autoincrement())
+  genre         Json
+  title         String
+  author        String
+  description   String
+  publishedAt   DateTime
+  publisher     String
+  isAvailable   Boolean
+  dateLeave     DateTime?
+  dateReturn    DateTime?
+  user          User?    @relation(fields: [idUserHasBook], references: [id])
+  idUserHasBook Int?     // Champ pour la clé étrangère
+  isbn          Int      @unique
+  createdAt     DateTime? @default(now())
+  lastModified  DateTime? @updatedAt
+}
+
+model User {
+  id             Int      @id @default(autoincrement())
+  role           String
+  firstName      String
+  lastName       String
+  email          String @unique
+  phone          Int?
+  password_hash  String
+  password_salt  String
+  endSubscription DateTime?
+  books          Book[] 
+  contractStart  DateTime?
+  contractEnd    DateTime?
+  subscriber     Boolean?
+  salary         Int?
+  createdAt      DateTime? @default(now())
+  lastModified   DateTime? @updatedAt
+}
